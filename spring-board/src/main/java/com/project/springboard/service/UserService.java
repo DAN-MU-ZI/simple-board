@@ -10,13 +10,13 @@ import com.project.springboard.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
 	private final UserRepository userRepository;
 
-	@Transactional
 	public User addUser(UserRequestDto userRequestDto) {
 		User user = User.builder().email(userRequestDto.getEmail()).build();
 		User savedUser;
@@ -29,19 +29,17 @@ public class UserService {
 		return savedUser;
 	}
 
-	@Transactional
 	public void deleteUser(Long id) {
 		userRepository.deleteById(id);
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public User findById(Long id) {
 		User findUser;
-		try {
-			findUser = userRepository.findById(id).get();
-		} catch (Exception e) {
-			throw new RuntimeException("유저 정보를 찾을 수 없음");
-		}
+		
+		findUser = userRepository.findById(id)
+				.orElseThrow(()-> new RuntimeException("유저 정보를 찾을 수 없음"));
+
 		return findUser;
 	}
 }
