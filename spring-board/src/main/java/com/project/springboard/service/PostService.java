@@ -4,24 +4,28 @@ import com.project.springboard.domain.Post.Post;
 import com.project.springboard.domain.Post.PostDTO;
 import com.project.springboard.domain.User.User;
 import com.project.springboard.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Transactional
 @Service
 public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    public Post savePost(final User user, final PostDTO postDTO) {
+    public PostDTO savePost(final User user, final PostDTO postDTO) {
         Post post = Post.builder()
                 .user(user)
                 .title(postDTO.getTitle())
                 .content(postDTO.getContent())
                 .build();
 
-        return postRepository.save(post);
+        postRepository.save(post);
+
+        return PostDTO.from(post);
     }
 
     public PostDTO updatePost(final PostDTO postDTO) {
