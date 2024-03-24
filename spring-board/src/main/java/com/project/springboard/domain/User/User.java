@@ -1,5 +1,12 @@
 package com.project.springboard.domain.User;
 
+import com.project.springboard.domain.Post.Post;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import lombok.AccessLevel;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -21,9 +28,7 @@ import lombok.ToString;
 
 @Entity
 @Table
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ?")
@@ -35,10 +40,20 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@OneToMany(mappedBy = "user")
+	private final List<Post> posts = new ArrayList<>();
+
 	@Column(nullable = false, unique = true)
 	private String email;
 
 	@Column
 	@ColumnDefault("false")
 	private boolean deleted;
+
+	@Builder
+	public User(final Long id, final String email, final boolean deleted) {
+		this.id = id;
+		this.email = email;
+		this.deleted = deleted;
+	}
 }
