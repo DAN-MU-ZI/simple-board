@@ -22,7 +22,7 @@ public class UserService {
 		User savedUser;
 		try {
 			savedUser = userRepository.save(user);
-		} catch (DataIntegrityViolationException e) {
+		} catch (RuntimeException e) {
 			throw new RuntimeException("이메일이 중복");
 		}
 
