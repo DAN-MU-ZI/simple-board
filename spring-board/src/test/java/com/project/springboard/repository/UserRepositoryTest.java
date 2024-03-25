@@ -129,15 +129,27 @@ public class UserRepositoryTest {
 	@DisplayName("유저 정보 수정")
 	public void userUpdate() {
 		//given
-		User user = User.builder().email("kim@naver.com").build();
+		String newEmail = "lee@naver.com";
+
+		User user = User.builder()
+				.email("kim@naver.com")
+				.build();
 
 		//when
 		userRepository.save(user);
-		userRepository.findById(user.getId()).get().setEmail("lee@naver.com");
-		User findUser = userRepository.findById(user.getId()).get();
+
+		User updatedUser = User.builder()
+				.id(user.getId())
+				.email(newEmail)
+				.deleted(user.isDeleted())
+				.build();
+		userRepository.save(updatedUser);
+
+		User findUser = userRepository.findById(user.getId())
+				.orElseThrow(()->new RuntimeException("User 를 찾을 수 없습니다."));
 
 		//then
-		assertThat(findUser.getEmail()).isEqualTo("lee@naver.com");
+		assertThat(findUser.getEmail()).isEqualTo(newEmail);
 	}
 
 	@Test

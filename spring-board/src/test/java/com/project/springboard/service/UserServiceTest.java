@@ -33,8 +33,15 @@ public class UserServiceTest {
 	@DisplayName("유저 등록 성공")
 	public void addUser() {
 		//given
-		UserRequestDto userRequest = new UserRequestDto("kim@naver.com");
-		User user = User.builder().id(1L).email("kim@naver.com").build();
+		String email = "kim@naver.com";
+		UserRequestDto userRequest = UserRequestDto.builder()
+				.email(email)
+				.build();
+
+		User user = User.builder()
+				.id(1L)
+				.email(email)
+				.build();
 
 		//stub
 		when(userRepository.save(any(User.class))).thenReturn(user);
@@ -52,16 +59,19 @@ public class UserServiceTest {
 	@DisplayName("유저 등록 실패")
 	public void addUserX() {
 		//given
-		UserRequestDto userRequest = new UserRequestDto("kim@naver.com");
+		UserRequestDto userRequest = UserRequestDto.builder()
+				.email("kim@naver.com")
+				.build();
 		User user = userRequest.toEntity();
+		RuntimeException runtimeException = new RuntimeException("이메일이 중복");
 
 		//stub
-		when(userRepository.save(user)).thenThrow(DataIntegrityViolationException.class);
+		when(userRepository.save(user)).thenThrow(runtimeException);
 
 		//when
 
 		//then
-		assertThatThrownBy(() -> userService.addUser(userRequest)).isInstanceOf(RuntimeException.class);
+		assertThatThrownBy(() -> userService.addUser(userRequest)).isInstanceOf(runtimeException.getClass());
 	}
 
 	@Test
