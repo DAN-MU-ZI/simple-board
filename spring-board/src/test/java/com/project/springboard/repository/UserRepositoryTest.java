@@ -1,20 +1,16 @@
 package com.project.springboard.repository;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.project.springboard.domain.User.User;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
-
-import com.project.springboard.domain.User.User;
 
 @DataJpaTest
 public class UserRepositoryTest {
@@ -101,7 +97,7 @@ public class UserRepositoryTest {
 		User userB = userRepository.findByEmail("lee@naver.com");
 		User userC = userRepository.findByEmail("park@naver.com");
 
-		//then
+		// then
 		assertThat(userA.getEmail()).isEqualTo("kim@naver.com");
 		assertThat(userB.getEmail()).isEqualTo("lee@naver.com");
 		assertThat(userC).isNull();
@@ -132,21 +128,21 @@ public class UserRepositoryTest {
 		String newEmail = "lee@naver.com";
 
 		User user = User.builder()
-				.email("kim@naver.com")
-				.build();
+			.email("kim@naver.com")
+			.build();
 
 		//when
 		userRepository.save(user);
 
 		User updatedUser = User.builder()
-				.id(user.getId())
-				.email(newEmail)
-				.deleted(user.isDeleted())
-				.build();
+			.id(user.getId())
+			.email(newEmail)
+			.deleted(user.isDeleted())
+			.build();
 		userRepository.save(updatedUser);
 
 		User findUser = userRepository.findById(user.getId())
-				.orElseThrow(()->new RuntimeException("User 를 찾을 수 없습니다."));
+			.orElseThrow(() -> new RuntimeException("User 를 찾을 수 없습니다."));
 
 		//then
 		assertThat(findUser.getEmail()).isEqualTo(newEmail);

@@ -13,53 +13,53 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Service
 public class PostService {
-    @Autowired
-    private PostRepository postRepository;
+	@Autowired
+	private PostRepository postRepository;
 
-    public PostDTO savePost(final User user, final PostDTO postDTO) {
-        Post post = Post.builder()
-                .user(user)
-                .title(postDTO.getTitle())
-                .content(postDTO.getContent())
-                .build();
+	public PostDTO savePost(final User user, final PostDTO postDTO) {
+		Post post = Post.builder()
+			.user(user)
+			.title(postDTO.getTitle())
+			.content(postDTO.getContent())
+			.build();
 
-        postRepository.save(post);
+		postRepository.save(post);
 
-        return PostDTO.from(post);
-    }
+		return PostDTO.from(post);
+	}
 
-    public PostDTO updatePost(final PostDTO postDTO) {
-        Post existingPost = getExistingPost(postDTO);
+	public PostDTO updatePost(final PostDTO postDTO) {
+		Post existingPost = getExistingPost(postDTO);
 
-        Post updatedPost = Post.builder()
-                .id(existingPost.getId())
-                .user(existingPost.getUser())
-                .title(postDTO.getTitle())
-                .content(postDTO.getContent())
-                .build();
+		Post updatedPost = Post.builder()
+			.id(existingPost.getId())
+			.user(existingPost.getUser())
+			.title(postDTO.getTitle())
+			.content(postDTO.getContent())
+			.build();
 
-        postRepository.save(updatedPost);
+		postRepository.save(updatedPost);
 
-        return PostDTO.from(updatedPost);
-    }
+		return PostDTO.from(updatedPost);
+	}
 
-    public void deletePost(final PostDTO postDTO) {
-        Post existingPost = getExistingPost(postDTO);
+	public void deletePost(final PostDTO postDTO) {
+		Post existingPost = getExistingPost(postDTO);
 
-        postRepository.delete(existingPost);
-    }
+		postRepository.delete(existingPost);
+	}
 
-    private Post getExistingPost(final PostDTO postDTO) {
-        return postRepository.findById(postDTO.getId())
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 Post가 없습니다. id=" + postDTO.getId()));
-    }
+	private Post getExistingPost(final PostDTO postDTO) {
+		return postRepository.findById(postDTO.getId())
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 Post가 없습니다. id=" + postDTO.getId()));
+	}
 
-    public List<PostDTO> findAllPosts() {
+	public List<PostDTO> findAllPosts() {
 
-        List<Post> posts = postRepository.findAll();
+		List<Post> posts = postRepository.findAll();
 
-        return posts.stream()
-                .map(PostDTO::from)
-                .collect(Collectors.toList());
-    }
+		return posts.stream()
+			.map(PostDTO::from)
+			.collect(Collectors.toList());
+	}
 }
