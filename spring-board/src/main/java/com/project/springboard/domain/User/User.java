@@ -30,7 +30,6 @@ import lombok.ToString;
 @Table
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = false")
 @ToString
