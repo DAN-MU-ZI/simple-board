@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.project.springboard.domain.User.User;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class UserRepositoryTest {
 
 	@Test
 	@DisplayName("UserRepository가 Null이 아님")
-	public void UserRepositoryIsNotNull() {
+	public void userRepositoryIsNotNull() {
 		assertThat(userRepository).isNotNull();
 	}
 
@@ -64,9 +63,11 @@ public class UserRepositoryTest {
 		User savedUser = userRepository.save(user1);
 
 		//when
-		User findUser = userRepository.findById(savedUser.getId()).get();
+		User findUser = userRepository.findById(savedUser.getId())
+			.orElse(null);
 
 		//then
+		assertThat(findUser).isNotNull();
 		assertThat(findUser.getId()).isNotNull();
 		assertThat(findUser.getEmail()).isEqualTo(savedUser.getEmail());
 	}
@@ -79,8 +80,7 @@ public class UserRepositoryTest {
 		User savedUser = userRepository.save(user1);
 
 		//when, then
-		assertThrows(NoSuchElementException.class,
-			() -> userRepository.findById(savedUser.getId() + 1).get());
+		assertThat(userRepository.findById(savedUser.getId() + 1)).isNotPresent();
 	}
 
 	@Test

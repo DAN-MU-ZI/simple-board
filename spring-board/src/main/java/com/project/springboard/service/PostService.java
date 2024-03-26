@@ -16,11 +16,11 @@ public class PostService {
 	@Autowired
 	private PostRepository postRepository;
 
-	public PostDTO savePost(final User user, final PostDTO postDTO) {
+	public PostDTO savePost(final User user, final PostDTO postDto) {
 		Post post = Post.builder()
 			.user(user)
-			.title(postDTO.getTitle())
-			.content(postDTO.getContent())
+			.title(postDto.getTitle())
+			.content(postDto.getContent())
 			.build();
 
 		postRepository.save(post);
@@ -28,14 +28,14 @@ public class PostService {
 		return PostDTO.from(post);
 	}
 
-	public PostDTO updatePost(final PostDTO postDTO) {
-		Post existingPost = getExistingPost(postDTO);
+	public PostDTO updatePost(final PostDTO postDto) {
+		Post existingPost = getExistingPost(postDto);
 
 		Post updatedPost = Post.builder()
 			.id(existingPost.getId())
 			.user(existingPost.getUser())
-			.title(postDTO.getTitle())
-			.content(postDTO.getContent())
+			.title(postDto.getTitle())
+			.content(postDto.getContent())
 			.build();
 
 		postRepository.save(updatedPost);
@@ -43,15 +43,15 @@ public class PostService {
 		return PostDTO.from(updatedPost);
 	}
 
-	public void deletePost(final PostDTO postDTO) {
-		Post existingPost = getExistingPost(postDTO);
+	public void deletePost(final PostDTO postDto) {
+		Post existingPost = getExistingPost(postDto);
 
 		postRepository.delete(existingPost);
 	}
 
-	private Post getExistingPost(final PostDTO postDTO) {
-		return postRepository.findById(postDTO.getId())
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 Post가 없습니다. id=" + postDTO.getId()));
+	private Post getExistingPost(final PostDTO postDto) {
+		return postRepository.findById(postDto.getId())
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 Post가 없습니다. id=" + postDto.getId()));
 	}
 
 	public List<PostDTO> findAllPosts() {
