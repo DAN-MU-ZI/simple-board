@@ -8,8 +8,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.springboard.domain.Post.Post;
-import com.project.springboard.domain.Post.PostDTO;
 import com.project.springboard.domain.User.User;
+import com.project.springboard.dto.PostDTO;
 import com.project.springboard.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;

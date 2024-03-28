@@ -1,5 +1,6 @@
-package com.project.springboard.domain.Post;
+package com.project.springboard.dto;
 
+import com.project.springboard.domain.Post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
