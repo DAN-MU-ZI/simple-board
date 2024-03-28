@@ -7,14 +7,15 @@ import com.project.springboard.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Transactional
 @Service
 public class PostService {
-	@Autowired
-	private PostRepository postRepository;
+	
+	private final PostRepository postRepository;
 
 	public PostDTO savePost(final User user, final PostDTO postDto) {
 		Post post = Post.builder()
