@@ -32,9 +32,9 @@ class PostServiceTest {
 	@Test
 	void givenPost_whenSave_thenSuccess() {
 		User user = User.builder().build();
-		PostDTO postDTO = PostDTO.builder().title("title").content("content").build();
+		PostDTO postDto = PostDTO.builder().title("title").content("content").build();
 
-		service.savePost(user, postDTO);
+		service.savePost(user, postDto);
 
 		verify(repository).save(any(Post.class));
 	}
@@ -52,7 +52,7 @@ class PostServiceTest {
 
 		String newTitle = "new title";
 		String newContent = "new content";
-		PostDTO updatedPostDTO = PostDTO.builder()
+		PostDTO updatedPostDto = PostDTO.builder()
 			.id(existPost.getId())
 			.title(newTitle)
 			.content(newContent)
@@ -65,7 +65,7 @@ class PostServiceTest {
 			.build();
 		when(repository.save(any(Post.class))).thenReturn(expectedUpdatedPost);
 
-		PostDTO updatedPost = service.updatePost(updatedPostDTO);
+		PostDTO updatedPost = service.updatePost(updatedPostDto);
 
 		assertThat(updatedPost.getTitle()).isEqualTo(newTitle);
 		assertThat(updatedPost.getContent()).isEqualTo(newContent);
@@ -76,7 +76,7 @@ class PostServiceTest {
 	@Test
 	void givenPost_whenDelete_thenSuccess() {
 		Long postId = 1L;
-		PostDTO postDTO = PostDTO.builder()
+		PostDTO postDto = PostDTO.builder()
 			.id(postId)
 			.build();
 		Post post = Post.builder()
@@ -85,7 +85,7 @@ class PostServiceTest {
 
 		when(repository.findById(postId)).thenReturn(Optional.of(post));
 
-		service.deletePost(postDTO);
+		service.deletePost(postDto);
 
 		verify(repository).delete(post);
 	}
