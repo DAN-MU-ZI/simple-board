@@ -1,20 +1,23 @@
 package com.project.springboard.service;
 
 import com.project.springboard.domain.Post.Post;
-import com.project.springboard.domain.Post.PostDTO;
 import com.project.springboard.domain.User.User;
+import com.project.springboard.dto.PostDTO;
+import com.project.springboard.dto.PostDetailDTO;
+import com.project.springboard.dto.PostsByUserDTO;
 import com.project.springboard.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Transactional
 @Service
 public class PostService {
-	@Autowired
-	private PostRepository postRepository;
+
+	private final PostRepository postRepository;
 
 	public PostDTO savePost(final User user, final PostDTO postDto) {
 		Post post = Post.builder()
@@ -61,5 +64,17 @@ public class PostService {
 		return posts.stream()
 			.map(PostDTO::from)
 			.collect(Collectors.toList());
+	}
+
+	public PostDetailDTO getPostDetail(final long postId) {
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 Post가 없습니다. id=" + postId));
+
+		return new PostDetailDTO(post);
+	}
+
+	public PostsByUserDTO getPostsByUser(final User user) {
+		List<Post> posts = postRepository.findAllByUser(user);
+		return new PostsByUserDTO(posts);
 	}
 }

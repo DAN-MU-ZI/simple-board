@@ -1,5 +1,6 @@
-package com.project.springboard.domain.Post;
+package com.project.springboard.dto;
 
+import com.project.springboard.domain.Post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,12 @@ public class PostDTO {
 		this.id = id;
 		this.title = title;
 		this.content = content;
+	}
+
+	public PostDTO(final Post post) {
+		this.id = post.getId();
+		this.title = post.getTitle();
+		this.content = post.getContent();
 	}
 
 	public static PostDTO from(Post post) {

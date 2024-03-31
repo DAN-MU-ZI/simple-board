@@ -25,4 +25,12 @@ public class UserRequestDto {
 	public User toEntity() {
 		return User.builder().email(this.email).build();
 	}
+
+	public static UserRequestDto from(final User user) {
+		return UserRequestDto.builder()
+			.id(user.getId())
+			.email(user.getEmail())
+			.deleted(user.isDeleted())
+			.build();
+	}
 }
