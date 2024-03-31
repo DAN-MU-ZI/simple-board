@@ -4,12 +4,15 @@ import com.project.springboard.domain.Post.Post;
 import com.project.springboard.domain.User.User;
 import com.project.springboard.dto.PostDTO;
 import com.project.springboard.dto.PostDetailDTO;
+import com.project.springboard.dto.PostPageDTO;
 import com.project.springboard.dto.PostsByUserDTO;
 import com.project.springboard.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -76,5 +79,9 @@ public class PostService {
 	public PostsByUserDTO getPostsByUser(final User user) {
 		List<Post> posts = postRepository.findAllByUser(user);
 		return new PostsByUserDTO(posts);
+	}
+
+	public Page<PostPageDTO> findAllPostsWithPageRequest(final PageRequest pageRequest) {
+		return postRepository.findAll(pageRequest).map(PostPageDTO::from);
 	}
 }
