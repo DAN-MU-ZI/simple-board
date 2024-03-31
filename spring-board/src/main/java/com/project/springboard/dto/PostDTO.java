@@ -19,6 +19,12 @@ public class PostDTO {
 		this.content = content;
 	}
 
+	public PostDTO(final Post post) {
+		this.id = post.getId();
+		this.title = post.getTitle();
+		this.content = post.getContent();
+	}
+
 	public static PostDTO from(Post post) {
 		return PostDTO.builder()
 			.id(post.getId())
