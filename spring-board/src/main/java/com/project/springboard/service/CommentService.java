@@ -46,7 +46,6 @@ public class CommentService {
 			.build();
 
 		commentRepository.save(comment);
-		post.getComments().add(comment);
 
 		return CommentDTO.from(comment);
 	}
