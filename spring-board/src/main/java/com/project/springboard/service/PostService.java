@@ -3,6 +3,8 @@ package com.project.springboard.service;
 import com.project.springboard.domain.Post.Post;
 import com.project.springboard.domain.User.User;
 import com.project.springboard.dto.PostDTO;
+import com.project.springboard.dto.PostDetailDTO;
+import com.project.springboard.dto.PostsByUserDTO;
 import com.project.springboard.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Service
 public class PostService {
-	
+
 	private final PostRepository postRepository;
 
 	public PostDTO savePost(final User user, final PostDTO postDto) {
@@ -62,5 +64,17 @@ public class PostService {
 		return posts.stream()
 			.map(PostDTO::from)
 			.collect(Collectors.toList());
+	}
+
+	public PostDetailDTO getPostDetail(final long postId) {
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 Post가 없습니다. id=" + postId));
+
+		return new PostDetailDTO(post);
+	}
+
+	public PostsByUserDTO getPostsByUser(final User user) {
+		List<Post> posts = postRepository.findAllByUser(user);
+		return new PostsByUserDTO(posts);
 	}
 }
