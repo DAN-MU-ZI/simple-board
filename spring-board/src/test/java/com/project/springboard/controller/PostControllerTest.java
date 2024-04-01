@@ -114,4 +114,20 @@ class PostControllerTest {
 			.andExpect(status().isOk())
 			.andDo(print());
 	}
+
+	@DisplayName("[GET] /post/{postId}/comments/pages 댓글 목록 조회")
+	@Test
+	void getCommentPageOfPost_Success() throws Exception {
+		int page = 0;
+		long postId = 1L;
+		String url = "/api/post/" + postId + "/comments/pages?page=" + page;
+		mockMvc.perform(get(url)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andDo(print())
+			.andExpect(jsonPath("$.content").isArray())
+			.andExpect(jsonPath("$.content[0].id").value(1L))
+			.andExpect(jsonPath("$.content[0].userId").value(1L))
+			.andExpect(jsonPath("$.size").value(5));
+	}
 }
