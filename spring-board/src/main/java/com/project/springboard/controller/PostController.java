@@ -52,22 +52,22 @@ public class PostController {
 	}
 
 	@GetMapping("/{postId}")
-	public ResponseEntity<PostDetailDTO> getPostDetail(@PathVariable long postId) {
+	public ResponseEntity<PostDetailDTO> getPostDetail(@PathVariable(value = "postId") long postId) {
 		PostDetailDTO postDetail = postService.getPostDetail(postId);
 
 		return ResponseEntity.status(HttpStatus.OK).body(postDetail);
 	}
 
 	@GetMapping("/pages")
-	public ResponseEntity<Page<PostPageDTO>> getPostPage(@RequestParam(defaultValue = "0") int page) {
+	public ResponseEntity<Page<PostPageDTO>> getPostPage(@RequestParam(value = "page", defaultValue = "0") int page) {
 		PageRequest pageRequest = PageRequest.of(page, 5);
 		Page<PostPageDTO> response = postService.findAllPostsWithPageRequest(pageRequest);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping("/{postId}/comments/pages")
-	public ResponseEntity<Page<PostCommentDTO>> getCommentPage(@PathVariable final Long postId,
-		@RequestParam(defaultValue = "0") int page) {
+	public ResponseEntity<Page<PostCommentDTO>> getCommentPage(@PathVariable(value = "postId") final Long postId,
+		@RequestParam(value = "page", defaultValue = "0") int page) {
 		PageRequest pageRequest = PageRequest.of(page, 5);
 		Page<PostCommentDTO> response = postService.findCommentsByPostId(postId, pageRequest);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
