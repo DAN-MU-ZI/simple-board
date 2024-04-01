@@ -2,10 +2,12 @@ package com.project.springboard.service;
 
 import com.project.springboard.domain.Post.Post;
 import com.project.springboard.domain.User.User;
+import com.project.springboard.dto.PostCommentDTO;
 import com.project.springboard.dto.PostDTO;
 import com.project.springboard.dto.PostDetailDTO;
 import com.project.springboard.dto.PostPageDTO;
 import com.project.springboard.dto.PostsByUserDTO;
+import com.project.springboard.repository.CommentRepository;
 import com.project.springboard.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
 	private final PostRepository postRepository;
+	private final CommentRepository commentRepository;
 
 	public PostDTO savePost(final User user, final PostDTO postDto) {
 		Post post = Post.builder()
@@ -83,5 +86,13 @@ public class PostService {
 
 	public Page<PostPageDTO> findAllPostsWithPageRequest(final PageRequest pageRequest) {
 		return postRepository.findAll(pageRequest).map(PostPageDTO::from);
+	}
+
+	public Page<PostCommentDTO> findCommentsByPostId(final Long postId, final PageRequest pageRequest) {
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 Post가 없습니다. id=" + postId));
+
+		return commentRepository.findAllByPost(post, pageRequest)
+			.map(PostCommentDTO::from);
 	}
 }

@@ -1,6 +1,7 @@
 package com.project.springboard.controller;
 
 import com.project.springboard.domain.User.User;
+import com.project.springboard.dto.PostCommentDTO;
 import com.project.springboard.dto.PostDTO;
 import com.project.springboard.dto.PostDetailDTO;
 import com.project.springboard.dto.PostPageDTO;
@@ -44,8 +45,8 @@ public class PostController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<String> deletePost(@RequestBody PostDTO postDTO) {
-		postService.deletePost(postDTO);
+	public ResponseEntity<String> deletePost(@RequestBody PostDTO postDto) {
+		postService.deletePost(postDto);
 
 		return ResponseEntity.status(HttpStatus.OK).body("Post deleted successfully");
 	}
@@ -61,6 +62,14 @@ public class PostController {
 	public ResponseEntity<Page<PostPageDTO>> getPostPage(@RequestParam(defaultValue = "0") int page) {
 		PageRequest pageRequest = PageRequest.of(page, 5);
 		Page<PostPageDTO> response = postService.findAllPostsWithPageRequest(pageRequest);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+	@GetMapping("/{postId}/comments/pages")
+	public ResponseEntity<Page<PostCommentDTO>> getCommentPage(@PathVariable final Long postId,
+		@RequestParam(defaultValue = "0") int page) {
+		PageRequest pageRequest = PageRequest.of(page, 5);
+		Page<PostCommentDTO> response = postService.findCommentsByPostId(postId, pageRequest);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }
