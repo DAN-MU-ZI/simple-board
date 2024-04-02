@@ -8,7 +8,8 @@ import static org.mockito.Mockito.when;
 import com.project.springboard.domain.Comment.Comment;
 import com.project.springboard.domain.Post.Post;
 import com.project.springboard.domain.User.User;
-import com.project.springboard.dto.CommentDTO;
+import com.project.springboard.dto.CommentCreateDTO;
+import com.project.springboard.dto.CommentDeleteDto;
 import com.project.springboard.dto.UserRequestDto;
 import com.project.springboard.repository.CommentRepository;
 import com.project.springboard.repository.PostRepository;
@@ -54,22 +55,21 @@ public class CommentServiceTest {
 			.post(post)
 			.content("content")
 			.build();
-		CommentDTO commentDto = CommentDTO.builder()
+		CommentCreateDTO commentCreateDto = CommentCreateDTO.builder()
 			.user(user)
 			.post(post)
 			.content("content")
 			.build();
 
-		when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 		when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
 		when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
-		CommentDTO savedCommentDto = service.saveComment(commentDto);
+		CommentCreateDTO savedCommentCreateDto = service.saveComment(user, commentCreateDto);
 
 		verify(commentRepository).save(any(Comment.class));
-		assertThat(savedCommentDto.getUser()).isEqualTo(commentDto.getUser());
-		assertThat(savedCommentDto.getPost()).isEqualTo(commentDto.getPost());
-		assertThat(savedCommentDto.getContent()).isEqualTo(commentDto.getContent());
+		assertThat(savedCommentCreateDto.getUser()).isEqualTo(commentCreateDto.getUser());
+		assertThat(savedCommentCreateDto.getPost()).isEqualTo(commentCreateDto.getPost());
+		assertThat(savedCommentCreateDto.getContent()).isEqualTo(commentCreateDto.getContent());
 	}
 
 	@DisplayName("댓글 수정")
@@ -103,14 +103,14 @@ public class CommentServiceTest {
 			.content("comment content")
 			.build();
 
-		CommentDTO updatedDto = CommentDTO.builder()
+		CommentCreateDTO updatedDto = CommentCreateDTO.builder()
 			.id(existComment.getId())
 			.user(existComment.getUser())
 			.post(existComment.getPost())
 			.content(newContent)
 			.build();
 		when(commentRepository.save(any(Comment.class))).thenReturn(expectedUpdatedComment);
-		CommentDTO updatedComment = service.updateComment(updatedDto);
+		CommentCreateDTO updatedComment = service.updateComment(updatedDto);
 
 		assertThat(updatedComment.getContent()).isEqualTo(newContent);
 		assertThat(updatedComment.getUser()).isEqualTo(user);
@@ -123,15 +123,21 @@ public class CommentServiceTest {
 	@Test
 	void givenComment_whenDeleteByCommentEntity_thenCommentIsDeleted() {
 		Long existCommentId = 1L;
+		User user = User.builder()
+			.id(1L)
+			.build();
 		Comment comment = Comment.builder()
 			.id(existCommentId)
+			.user(user)
 			.content("comment content")
 			.build();
 
-		CommentDTO commentDto = CommentDTO.from(comment);
+		CommentDeleteDto commentDeleteDto = CommentDeleteDto.builder()
+			.id(comment.getId())
+			.build();
 		when(commentRepository.findById(existCommentId)).thenReturn(Optional.of(comment));
 
-		service.deleteComment(commentDto);
+		service.deleteComment(user, commentDeleteDto);
 
 		verify(commentRepository).delete(comment);
 	}
@@ -155,7 +161,7 @@ public class CommentServiceTest {
 
 		when(userRepository.findById(userRequestDto.getId())).thenReturn(Optional.of(user));
 		when(commentRepository.findAllByUser(user)).thenReturn(comments);
-		List<CommentDTO> result = service.findAllByUser(userRequestDto);
+		List<CommentCreateDTO> result = service.findAllByUser(userRequestDto);
 
 		assertThat(result).isNotNull();
 		assertThat(comments.size()).isEqualTo(2);

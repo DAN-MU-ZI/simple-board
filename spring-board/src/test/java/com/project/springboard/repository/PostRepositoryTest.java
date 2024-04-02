@@ -9,6 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @Transactional
@@ -70,5 +74,46 @@ class PostRepositoryTest {
 		postRepository.deleteById(post.getId());
 
 		assertThat(postRepository.findAll().size()).isEqualTo(previousSize - 1);
+	}
+
+	@Sql("/PostControllerData.sql")
+	@Test
+	void givenPageRequest_whenFindAllLastPage_thenSuccess() {
+		int page = 4;
+		int pageSize = 3;
+		int repoSize = postRepository.findAll().size();
+		Pageable pageable = PageRequest.of(page, pageSize);
+		Page<Post> posts = postRepository.findAll(pageable);
+
+		assertThat(repoSize).isEqualTo(10);
+		assertThat(posts.getNumberOfElements()).isEqualTo(0);
+		assertThat(posts.getTotalElements()).isEqualTo(repoSize);
+		assertThat(posts.getTotalPages()).isEqualTo(repoSize / pageSize + 1);
+	}
+
+	@Sql("/PostControllerData.sql")
+	@Test
+	void givenPageRequest_whenFindAllMiddlePage_thenSuccess() {
+		int page = 3;
+		int pageSize = 3;
+		int repoSize = postRepository.findAll().size();
+		Pageable pageable = PageRequest.of(page, pageSize);
+		Page<Post> posts = postRepository.findAll(pageable);
+
+		assertThat(repoSize).isEqualTo(10);
+		assertThat(posts.getNumberOfElements()).isEqualTo(repoSize % pageSize);
+	}
+
+	@Sql("/PostControllerData.sql")
+	@Test
+	void givenPageRequest_whenFindAllFirstPage_thenSuccess() {
+		int page = 0;
+		int pageSize = 3;
+		int repoSize = postRepository.findAll().size();
+		Pageable pageable = PageRequest.of(page, pageSize);
+		Page<Post> posts = postRepository.findAll(pageable);
+
+		assertThat(repoSize).isEqualTo(10);
+		assertThat(posts.getNumberOfElements()).isEqualTo(pageSize);
 	}
 }
