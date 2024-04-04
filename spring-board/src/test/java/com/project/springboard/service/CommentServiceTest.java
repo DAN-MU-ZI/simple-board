@@ -55,21 +55,15 @@ public class CommentServiceTest {
 			.post(post)
 			.content("content")
 			.build();
-		CommentCreateDTO commentCreateDto = CommentCreateDTO.builder()
-			.user(user)
-			.post(post)
-			.content("content")
-			.build();
+		CommentCreateDTO commentCreateDto = CommentCreateDTO.from(comment);
 
 		when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
 		when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
-		CommentCreateDTO savedCommentCreateDto = service.saveComment(user, commentCreateDto);
+		CommentCreateDTO savedCommentCreateDto = service.createComment(user, commentCreateDto);
 
 		verify(commentRepository).save(any(Comment.class));
-		assertThat(savedCommentCreateDto.getUser()).isEqualTo(commentCreateDto.getUser());
-		assertThat(savedCommentCreateDto.getPost()).isEqualTo(commentCreateDto.getPost());
-		assertThat(savedCommentCreateDto.getContent()).isEqualTo(commentCreateDto.getContent());
+		assertThat(savedCommentCreateDto.content()).isEqualTo(commentCreateDto.content());
 	}
 
 	@DisplayName("댓글 수정")
@@ -100,21 +94,14 @@ public class CommentServiceTest {
 			.id(existCommentId)
 			.user(user)
 			.post(post)
-			.content("comment content")
-			.build();
-
-		CommentCreateDTO updatedDto = CommentCreateDTO.builder()
-			.id(existComment.getId())
-			.user(existComment.getUser())
-			.post(existComment.getPost())
 			.content(newContent)
 			.build();
+
+		CommentCreateDTO updatedDto = CommentCreateDTO.from(expectedUpdatedComment);
 		when(commentRepository.save(any(Comment.class))).thenReturn(expectedUpdatedComment);
 		CommentCreateDTO updatedComment = service.updateComment(updatedDto);
 
-		assertThat(updatedComment.getContent()).isEqualTo(newContent);
-		assertThat(updatedComment.getUser()).isEqualTo(user);
-		assertThat(updatedComment.getPost()).isEqualTo(post);
+		assertThat(updatedComment.content()).isEqualTo(newContent);
 
 		verify(commentRepository).save(any(Comment.class));
 	}
@@ -151,10 +138,19 @@ public class CommentServiceTest {
 			.build();
 		UserRequestDto userRequestDto = UserRequestDto.from(user);
 
+		Post post = Post.builder()
+			.id(1L)
+			.user(user)
+			.build();
+
 		Comment comment1 = Comment.builder()
+			.user(user)
+			.post(post)
 			.content("content 1")
 			.build();
 		Comment comment2 = Comment.builder()
+			.user(user)
+			.post(post)
 			.content("content 2")
 			.build();
 		List<Comment> comments = List.of(comment1, comment2);

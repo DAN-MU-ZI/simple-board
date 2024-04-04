@@ -26,7 +26,7 @@ public class CommentController {
 		User user = User.builder()
 			.id(1L)
 			.build();
-		commentService.saveComment(user, commentCreateDto);
+		commentService.createComment(user, commentCreateDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body("Comment created successfully");
 	}
 

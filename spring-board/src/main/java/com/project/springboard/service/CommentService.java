@@ -27,22 +27,18 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 
 	private Comment getExistingComment(final CommentCreateDTO commentCreateDto) {
-		return commentRepository.findById(commentCreateDto.getId())
-			.orElseThrow(() -> new IllegalArgumentException("해당하는 Comment가 없습니다. id=" + commentCreateDto.getId()));
+		return commentRepository.findById(commentCreateDto.id())
+			.orElseThrow(() -> new IllegalArgumentException("해당하는 Comment가 없습니다. id=" + commentCreateDto.id()));
 	}
 
-	public CommentCreateDTO saveComment(final User user, final CommentCreateDTO commentCreateDto) {
-		if (commentCreateDto.getPost() == null) {
-			throw new IllegalArgumentException("Post cannot be null");
-		}
-
-		Post post = postRepository.findById(commentCreateDto.getPost().getId())
+	public CommentCreateDTO createComment(final User user, final CommentCreateDTO commentCreateDto) {
+		Post post = postRepository.findById(commentCreateDto.postId())
 			.orElseThrow(() -> new IllegalArgumentException("Post cannot be null"));
 
 		Comment comment = Comment.builder()
 			.user(user)
 			.post(post)
-			.content(commentCreateDto.getContent())
+			.content(commentCreateDto.content())
 			.build();
 
 		commentRepository.save(comment);
@@ -57,7 +53,7 @@ public class CommentService {
 			.id(comment.getId())
 			.user(comment.getUser())
 			.post(comment.getPost())
-			.content(updatedDto.getContent())
+			.content(updatedDto.content())
 			.build();
 		commentRepository.save(updatedComment);
 

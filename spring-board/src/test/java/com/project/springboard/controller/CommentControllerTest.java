@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.springboard.domain.Comment.Comment;
 import com.project.springboard.domain.Post.Post;
 import com.project.springboard.domain.User.User;
 import com.project.springboard.dto.Comment.CommentCreateDTO;
@@ -37,12 +38,13 @@ public class CommentControllerTest {
 	@Test
 	void createComment_Success() throws Exception {
 		User user = User.builder().id(1L).build();
-		Post post = Post.builder().id(1L).build();
-		CommentCreateDTO commentCreateDto = CommentCreateDTO.builder()
+		Post post = Post.builder().user(user).id(1L).build();
+		Comment comment = Comment.builder()
 			.user(user)
 			.post(post)
 			.content("content11")
 			.build();
+		CommentCreateDTO commentCreateDto = CommentCreateDTO.from(comment);
 
 		mockMvc.perform(post("/api/comment")
 				.contentType(MediaType.APPLICATION_JSON)
