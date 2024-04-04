@@ -9,9 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.springboard.domain.Post.Post;
 import com.project.springboard.domain.User.User;
-import com.project.springboard.dto.CommentCreateDTO;
-import com.project.springboard.dto.CommentDeleteDto;
-import com.project.springboard.dto.CommentUpdateDTO;
+import com.project.springboard.dto.Comment.CommentCreateDTO;
+import com.project.springboard.dto.Comment.CommentDeleteDto;
+import com.project.springboard.dto.Comment.CommentUpdateDTO;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

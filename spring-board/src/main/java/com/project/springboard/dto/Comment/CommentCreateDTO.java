@@ -1,4 +1,4 @@
-package com.project.springboard.dto;
+package com.project.springboard.dto.Comment;
 
 import com.project.springboard.domain.Comment.Comment;
 import com.project.springboard.domain.Post.Post;

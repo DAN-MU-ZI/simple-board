@@ -1,9 +1,9 @@
 package com.project.springboard.controller;
 
 import com.project.springboard.domain.User.User;
-import com.project.springboard.dto.CommentCreateDTO;
-import com.project.springboard.dto.CommentDeleteDto;
-import com.project.springboard.dto.CommentUpdateDTO;
+import com.project.springboard.dto.Comment.CommentCreateDTO;
+import com.project.springboard.dto.Comment.CommentDeleteDto;
+import com.project.springboard.dto.Comment.CommentUpdateDTO;
 import com.project.springboard.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

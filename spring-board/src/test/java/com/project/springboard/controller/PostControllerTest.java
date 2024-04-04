@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.springboard.dto.PostDTO;
+import com.project.springboard.dto.Post.PostCreateDTO;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class PostControllerTest {
 	@DisplayName("[POST] /api/post 게시글 작성")
 	@Test
 	void createPost_Success() throws Exception {
-		PostDTO postDto = PostDTO.builder()
+		PostCreateDTO postDto = PostCreateDTO.builder()
 			.title("title")
 			.content("content")
 			.build();
@@ -50,7 +50,7 @@ class PostControllerTest {
 	@DisplayName("[PATCH] /api/post 게시글 수정")
 	@Test
 	void updatePost_Success() throws Exception {
-		PostDTO postDto = PostDTO.builder()
+		PostCreateDTO postDto = PostCreateDTO.builder()
 			.id(1L)
 			.title("title")
 			.content("new content")
@@ -66,7 +66,7 @@ class PostControllerTest {
 	@DisplayName("[DELETE] /api/post 게시글 삭제")
 	@Test
 	void deletePost_Success() throws Exception {
-		PostDTO postDto = PostDTO.builder()
+		PostCreateDTO postDto = PostCreateDTO.builder()
 			.id(1L)
 			.build();
 

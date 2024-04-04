@@ -1,10 +1,12 @@
 package com.project.springboard.controller;
 
 import com.project.springboard.domain.User.User;
-import com.project.springboard.dto.PostCommentDTO;
-import com.project.springboard.dto.PostDTO;
-import com.project.springboard.dto.PostDetailDTO;
-import com.project.springboard.dto.PostPageDTO;
+import com.project.springboard.dto.Post.PostCommentDTO;
+import com.project.springboard.dto.Post.PostCreateDTO;
+import com.project.springboard.dto.Post.PostDeleteDTO;
+import com.project.springboard.dto.Post.PostDetailDTO;
+import com.project.springboard.dto.Post.PostPageDTO;
+import com.project.springboard.dto.Post.PostUpdateDTO;
 import com.project.springboard.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,7 +30,7 @@ public class PostController {
 	private final PostService postService;
 
 	@PostMapping
-	public ResponseEntity<String> createPost(@RequestBody PostDTO postDto) {
+	public ResponseEntity<String> createPost(@RequestBody PostCreateDTO postDto) {
 		User user = User.builder()
 			.id(1L)
 			.build();
@@ -38,14 +40,14 @@ public class PostController {
 	}
 
 	@PatchMapping
-	public ResponseEntity<String> updatePost(@RequestBody PostDTO postDto) {
+	public ResponseEntity<String> updatePost(@RequestBody PostUpdateDTO postDto) {
 		postService.updatePost(postDto);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body("Post updated successfully");
 	}
 
 	@DeleteMapping
-	public ResponseEntity<String> deletePost(@RequestBody PostDTO postDto) {
+	public ResponseEntity<String> deletePost(@RequestBody PostDeleteDTO postDto) {
 		postService.deletePost(postDto);
 
 		return ResponseEntity.status(HttpStatus.OK).body("Post deleted successfully");

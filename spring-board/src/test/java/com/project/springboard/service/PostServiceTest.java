@@ -9,8 +9,10 @@ import static org.mockito.Mockito.when;
 
 import com.project.springboard.domain.Post.Post;
 import com.project.springboard.domain.User.User;
-import com.project.springboard.dto.PostDTO;
-import com.project.springboard.dto.PostDetailDTO;
+import com.project.springboard.dto.Post.PostCreateDTO;
+import com.project.springboard.dto.Post.PostDeleteDTO;
+import com.project.springboard.dto.Post.PostDetailDTO;
+import com.project.springboard.dto.Post.PostUpdateDTO;
 import com.project.springboard.dto.PostsByUserDTO;
 import com.project.springboard.repository.PostRepository;
 import jakarta.transaction.Transactional;
@@ -36,7 +38,7 @@ class PostServiceTest {
 	@Test
 	void givenPost_whenSave_thenSuccess() {
 		User user = User.builder().build();
-		PostDTO postDto = PostDTO.builder().title("title").content("content").build();
+		PostCreateDTO postDto = PostCreateDTO.builder().title("title").content("content").build();
 
 		service.savePost(user, postDto);
 
@@ -57,7 +59,7 @@ class PostServiceTest {
 
 		String newTitle = "new title";
 		String newContent = "new content";
-		PostDTO updatedPostDto = PostDTO.builder()
+		PostUpdateDTO updatedPostDto = PostUpdateDTO.builder()
 			.id(existPost.getId())
 			.title(newTitle)
 			.content(newContent)
@@ -70,10 +72,10 @@ class PostServiceTest {
 			.build();
 		when(repository.save(any(Post.class))).thenReturn(expectedUpdatedPost);
 
-		PostDTO updatedPost = service.updatePost(updatedPostDto);
+		PostUpdateDTO updatedPost = service.updatePost(updatedPostDto);
 
-		assertThat(updatedPost.getTitle()).isEqualTo(newTitle);
-		assertThat(updatedPost.getContent()).isEqualTo(newContent);
+		assertThat(updatedPost.title()).isEqualTo(newTitle);
+		assertThat(updatedPost.content()).isEqualTo(newContent);
 
 		verify(repository).save(any(Post.class));
 	}
@@ -82,7 +84,7 @@ class PostServiceTest {
 	@Test
 	void givenPost_whenDelete_thenSuccess() {
 		Long postId = 1L;
-		PostDTO postDto = PostDTO.builder()
+		PostDeleteDTO postDto = PostDeleteDTO.builder()
 			.id(postId)
 			.build();
 		Post post = Post.builder()
@@ -113,11 +115,11 @@ class PostServiceTest {
 
 		when(repository.findAll()).thenReturn(Arrays.asList(post1, post2));
 
-		List<PostDTO> foundPosts = service.findAllPosts();
+		List<PostCreateDTO> foundPosts = service.findAllPosts();
 
 		assertEquals(2, foundPosts.size());
-		assertEquals(post1.getTitle(), foundPosts.get(0).getTitle());
-		assertEquals(post2.getTitle(), foundPosts.get(1).getTitle());
+		assertEquals(post1.getTitle(), foundPosts.get(0).title());
+		assertEquals(post2.getTitle(), foundPosts.get(1).title());
 
 		verify(repository, times(1)).findAll();
 	}
@@ -140,9 +142,9 @@ class PostServiceTest {
 		PostDetailDTO postDetail = service.getPostDetail(postId);
 
 		verify(repository).findById(postId);
-		assertThat(postDetail.getEmail()).isEqualTo(user.getEmail());
-		assertThat(postDetail.getTitle()).isEqualTo(post.getTitle());
-		assertThat(postDetail.getContent()).isEqualTo(post.getContent());
+		assertThat(postDetail.email()).isEqualTo(user.getEmail());
+		assertThat(postDetail.title()).isEqualTo(post.getTitle());
+		assertThat(postDetail.content()).isEqualTo(post.getContent());
 	}
 
 	@DisplayName("내가 작성한 게시글 조회")

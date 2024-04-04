@@ -1,4 +1,4 @@
-package com.project.springboard.dto;
+package com.project.springboard.dto.Comment;
 
 import lombok.Builder;
 import lombok.Getter;
