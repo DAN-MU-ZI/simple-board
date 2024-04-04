@@ -1,0 +1,22 @@
+logging:
+  level:
+    org.springframework: debug
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 1000 #??? ??
+
+    defer-datasource-initialization: true
